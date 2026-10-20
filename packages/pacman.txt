@@ -1,0 +1,43 @@
+# Official-repo packages installed by install.sh (one per line, # for comments)
+
+# Compositor + session
+sway
+swaybg
+swayidle
+swaylock
+xorg-xwayland
+xdg-desktop-portal
+xdg-desktop-portal-wlr
+xdg-desktop-portal-gtk
+polkit
+mate-polkit
+
+# Desktop components
+waybar
+wofi
+mako
+foot
+starship
+
+# Utilities used by keybindings / bar
+grim
+slurp
+wl-clipboard
+brightnessctl
+playerctl
+pipewire
+pipewire-pulse
+wireplumber
+pavucontrol
+networkmanager
+network-manager-applet
+pcmanfm
+
+# Themes + fonts
+papirus-icon-theme
+adwaita-cursors
+gnome-themes-extra
+ttf-jetbrains-mono-nerd
+ttf-dejavu
+otf-font-awesome
+noto-fonts-emoji
