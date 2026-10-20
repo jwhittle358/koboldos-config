@@ -1,0 +1,123 @@
+# KoboldOS Plymouth script theme
+
+Window.SetBackgroundTopColor(0.114, 0.114, 0.122);
+Window.SetBackgroundBottomColor(0.063, 0.063, 0.067);
+
+sw = Window.GetWidth();
+sh = Window.GetHeight();
+ox = Window.GetX();
+oy = Window.GetY();
+
+# ---- Logo: ~45% of screen height, never upscaled past the source ----
+logo.raw = Image("logo.png");
+logo.h = sh * 0.45;
+if (logo.h > logo.raw.GetHeight()) logo.h = logo.raw.GetHeight();
+logo.w = logo.raw.GetWidth() * logo.h / logo.raw.GetHeight();
+logo.image = logo.raw.Scale(logo.w, logo.h);
+logo.sprite = Sprite(logo.image);
+logo.x = ox + sw / 2 - logo.w / 2;
+logo.y = oy + sh * 0.42 - logo.h / 2;
+logo.sprite.SetPosition(logo.x, logo.y, 0);
+
+# ---- Progress bar ----
+bar_w = sw * 0.22;
+if (bar_w < 220) bar_w = 220;
+box.raw = Image("progress_box.png");
+box.image = box.raw.Scale(bar_w, box.raw.GetHeight());
+box.sprite = Sprite(box.image);
+box.x = ox + sw / 2 - bar_w / 2;
+box.y = logo.y + logo.h + sh * 0.06;
+box.sprite.SetPosition(box.x, box.y, 1);
+
+bar.raw = Image("progress_bar.png");
+bar.sprite = Sprite();
+bar.sprite.SetPosition(box.x + 2, box.y + 2, 2);
+last_w = -1;
+
+fun progress_callback(duration, progress) {
+    w = Math.Int((bar_w - 4) * progress);
+    if (w < 1) w = 1;
+    if (w != global.last_w) {
+        bar.sprite.SetImage(bar.raw.Scale(w, bar.raw.GetHeight()));
+        global.last_w = w;
+    }
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+if (Plymouth.GetMode() == "shutdown" || Plymouth.GetMode() == "reboot") {
+    box.sprite.SetOpacity(0);
+    bar.sprite.SetOpacity(0);
+}
+
+# ---- Password / question dialog (LUKS unlock etc.) ----
+entry.image = Image("entry.png");
+entry.sprite = Sprite(entry.image);
+entry.x = ox + sw / 2 - entry.image.GetWidth() / 2;
+entry.y = box.y - entry.image.GetHeight() / 2;
+entry.sprite.SetPosition(entry.x, entry.y, 10);
+entry.sprite.SetOpacity(0);
+
+pr.sprite = Sprite();
+pr.sprite.SetOpacity(0);
+dots.sprite = Sprite();
+dots.sprite.SetOpacity(0);
+
+fun show_dialog(label, text) {
+    box.sprite.SetOpacity(0);
+    bar.sprite.SetOpacity(0);
+    entry.sprite.SetOpacity(1);
+
+    p = Image.Text(label, 0.85, 0.79, 0.66, 1, "Sans 14");
+    pr.sprite.SetImage(p);
+    pr.sprite.SetPosition(ox + sw / 2 - p.GetWidth() / 2, entry.y - p.GetHeight() - 12, 11);
+    pr.sprite.SetOpacity(1);
+
+    if (text == "") {
+        dots.sprite.SetOpacity(0);
+    } else {
+        t = Image.Text(text, 0.88, 0.66, 0.25, 1, "Sans 16");
+        dots.sprite.SetImage(t);
+        dots.sprite.SetPosition(ox + sw / 2 - t.GetWidth() / 2,
+                                entry.y + entry.image.GetHeight() / 2 - t.GetHeight() / 2, 11);
+        dots.sprite.SetOpacity(1);
+    }
+}
+
+fun display_password_callback(prompt, bullets) {
+    s = "";
+    i = 0;
+    while (i < bullets && i < 40) {
+        s = s + "•";
+        i = i + 1;
+    }
+    show_dialog(prompt, s);
+}
+
+fun display_question_callback(prompt, entry_text) {
+    show_dialog(prompt, entry_text);
+}
+
+fun display_normal_callback() {
+    entry.sprite.SetOpacity(0);
+    pr.sprite.SetOpacity(0);
+    dots.sprite.SetOpacity(0);
+    if (Plymouth.GetMode() == "boot") {
+        box.sprite.SetOpacity(1);
+        bar.sprite.SetOpacity(1);
+    }
+}
+
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayQuestionFunction(display_question_callback);
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+
+# ---- Status messages (e.g. fsck, "Please unlock disk ...") ----
+msg.sprite = Sprite();
+msg.sprite.SetPosition(0, 0, 20);
+
+fun message_callback(text) {
+    m = Image.Text(text, 0.54, 0.50, 0.42, 1, "Sans 12");
+    msg.sprite.SetImage(m);
+    msg.sprite.SetPosition(ox + sw / 2 - m.GetWidth() / 2, oy + sh * 0.92, 20);
+}
+Plymouth.SetMessageFunction(message_callback);

@@ -20,7 +20,8 @@ A Sway desktop for Arch Linux, themed in crimson, charcoal, gold and ivory.
 | [swaylock](https://github.com/swaywm/swaylock) | `config/swaylock/config` | Lock screen |
 | [foot](https://codeberg.org/dnkl/foot) | `config/foot/foot.ini` | Terminal |
 | [Starship](https://starship.rs/) | `config/starship.toml` | Shell prompt |
-| GTK 3/4 | `config/gtk-*/settings.ini` | Arc-Dark theme, Papirus icons |
+| [greetd](https://sr.ht/~kennylevinsen/greetd/) + [ReGreet](https://github.com/rharish101/ReGreet) | `branding/greetd/` | Login screen (display manager) |
+| GTK 3/4 | `config/gtk-*/settings.ini` | Adwaita-dark theme, Papirus icons |
 
 ## Install
 
@@ -36,10 +37,12 @@ Run it as your normal user; it uses `sudo` where needed. By default it:
 2. Installs `packages/aur.txt` if `paru` or `yay` is available.
 3. Enables NetworkManager.
 4. Installs `wallpapers/crimson-gold.png` if present.
-5. Copies `config/` to `/etc/skel/.config` so new users get it.
-6. Copies `config/` to `~/.config`, moving any existing files to
+5. Installs the greetd + ReGreet login screen to `/etc/greetd/` and enables
+   `greetd.service` (unless another display manager is already enabled).
+6. Copies `config/` to `/etc/skel/.config` so new users get it.
+7. Copies `config/` to `~/.config`, moving any existing files to
    `~/.config/koboldos-backup-<timestamp>/` first.
-7. Adds Starship to `.bashrc`.
+8. Adds Starship to `.bashrc`.
 
 ### Options
 
@@ -48,6 +51,7 @@ Run it as your normal user; it uses `sudo` where needed. By default it:
 | `--no-packages` | Skip package installation |
 | `--no-skel` | Don't touch `/etc/skel` |
 | `--no-user` | Don't touch your own `~/.config` |
+| `--no-dm` | Don't set up the greetd + ReGreet display manager |
 | `--wallpaper PATH` | Use a different wallpaper image |
 | `-y`, `--yes` | Don't ask for confirmation |
 
@@ -76,6 +80,7 @@ Run it as your normal user; it uses `sudo` where needed. By default it:
 
 ```
 config/        Dotfiles, mirrored into ~/.config
+branding/      Boot splash, GRUB theme, swaylock and greetd/ReGreet login screen
 packages/      pacman.txt (official repos) and aur.txt
 wallpapers/    Optional crimson-gold.png
 install.sh     Installer

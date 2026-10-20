@@ -1,0 +1,16 @@
+# KoboldOS ReGreet config — installed to /etc/greetd/regreet.toml by install.sh.
+# The [background] section is dropped if no wallpaper is installed.
+
+[background]
+path = "@WALLPAPER@"
+fit = "Cover"
+
+[GTK]
+application_prefer_dark_theme = true
+theme_name = "Adwaita-dark"
+icon_theme_name = "Papirus-Dark"
+cursor_theme_name = "Adwaita"
+font_name = "DejaVu Sans 12"
+
+[appearance]
+greeting_msg = "Welcome to KoboldOS"

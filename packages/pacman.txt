@@ -12,6 +12,11 @@ xdg-desktop-portal-gtk
 polkit
 mate-polkit
 
+# Display manager (greetd + ReGreet greeter in cage)
+greetd
+greetd-regreet
+cage
+
 # Desktop components
 waybar
 wofi
@@ -32,6 +37,25 @@ pavucontrol
 networkmanager
 network-manager-applet
 pcmanfm
+unzip
+neovim
+
+# Apps
+spotify-launcher
+
+# Building AUR packages (paru)
+base-devel
+
+# LazyVim (Neovim) dependencies
+git
+curl
+gcc
+make
+ripgrep
+fd
+fzf
+lazygit
+tree-sitter-cli
 
 # Themes + fonts
 papirus-icon-theme
@@ -41,3 +65,5 @@ ttf-jetbrains-mono-nerd
 ttf-dejavu
 otf-font-awesome
 noto-fonts-emoji
+plymouth
+ttf-dejavu
